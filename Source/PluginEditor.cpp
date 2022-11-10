@@ -68,7 +68,7 @@ void ZmidiAudioProcessorEditor::paint(juce::Graphics& g)
         g.setColour(theme.getMain(1));
     }
     else {
-        g.setColour(theme.getBg2(1));
+        g.setColour(theme.getBg2(4));
     }
     juce::Path path;
     float w = getWidth();

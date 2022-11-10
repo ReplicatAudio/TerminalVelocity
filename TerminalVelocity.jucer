@@ -7,6 +7,12 @@
               pluginVST3Category="Dynamics,Fx,Tools">
   <MAINGROUP id="aiqdeI" name="TerminalVelocity">
     <GROUP id="{C1530E23-E2D3-D3B8-9585-0BCCA79250FC}" name="Source">
+      <FILE id="SM1hUR" name="RAFileIO.h" compile="0" resource="0" file="Source/RAFileIO.h"/>
+      <FILE id="eGNy4E" name="RASettings.h" compile="0" resource="0" file="Source/RASettings.h"/>
+      <FILE id="PrtLmz" name="RAActionMsg.h" compile="0" resource="0" file="Source/RAActionMsg.h"/>
+      <FILE id="vnVeMp" name="RAHttp.h" compile="0" resource="0" file="Source/RAHttp.h"/>
+      <FILE id="JXKEJi" name="RAMotdScreen.h" compile="0" resource="0" file="Source/RAMotdScreen.h"/>
+      <FILE id="odVsSF" name="RAStringTools.h" compile="0" resource="0" file="Source/RAStringTools.h"/>
       <FILE id="EJCzkc" name="ra_logo.png" compile="0" resource="1" file="Source/ra_logo.png"/>
       <FILE id="IxOHzo" name="Evolventa-Regular.ttf" compile="0" resource="1"
             file="Source/Evolventa-Regular.ttf"/>

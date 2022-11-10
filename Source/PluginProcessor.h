@@ -15,7 +15,8 @@ There is also a bug where the second slider cant seem to be set to a value over 
 #pragma once
 
 #include <JuceHeader.h>
-
+#include "RAFileIO.h"
+#include "RASettings.h"
 //==============================================================================
 /**
 */
@@ -69,6 +70,9 @@ public:
     juce::AudioParameterInt* p2;
 
     juce::ChangeBroadcaster cb;
+
+    RAFileIO fileIO;
+    RASettings settings;
 private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ZmidiAudioProcessor)

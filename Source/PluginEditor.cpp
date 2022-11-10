@@ -8,7 +8,7 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
-
+#include "RAActionMsg.h"
 
 
 //==============================================================================
@@ -49,7 +49,23 @@ ZmidiAudioProcessorEditor::ZmidiAudioProcessorEditor (ZmidiAudioProcessor& p)
     juce::Image raIconImage = juce::ImageCache::getFromMemory(BinaryData::ra_logo_png, BinaryData::ra_logo_pngSize).rescaled(logoW,logoH, juce::Graphics::highResamplingQuality);
     raLogoBtn.setImages(true, true, true, raIconImage, 0.005f, theme.getMain(0.75f), raIconImage, 0.5f, theme.getMain(1.5f), raIconImage, 0.25f, theme.getMain(2));
 
+    
+
     applyThemeTweaks();
+
+    // Process MOTD
+    addAndMakeVisible(motdScreen);
+    motdScreen.setColours(theme.getMain(1), theme.getBg(1));
+    motdScreen.addActionListener(this);
+    juce::String oldTag = audioProcessor.settings.get("motdTag");
+    bool showMotd = motdScreen.shouldShow(oldTag);
+    if (showMotd && audioProcessor.settings.getBool("updates"))
+    {
+        motdScreen.setVisible(true);
+    }
+    else {
+        motdScreen.setVisible(false);
+    }
 }
 
 ZmidiAudioProcessorEditor::~ZmidiAudioProcessorEditor()
@@ -108,6 +124,8 @@ void ZmidiAudioProcessorEditor::resized()
     typeSelect.setBounds(0,0,getWidth(), 30);
 
     raLogoBtn.setBounds(10, getHeight()-logoH, logoW, logoH);
+
+    motdScreen.setBounds(0, 0, getWidth(), getHeight());
 }
 
 void ZmidiAudioProcessorEditor::sliderValueChanged(juce::Slider* slider)
@@ -201,5 +219,19 @@ void ZmidiAudioProcessorEditor::floorVelocity()
     }
     if (audioProcessor.p2->get() < 0) {
         audioProcessor.p2->operator= (0);
+    }
+}
+
+void ZmidiAudioProcessorEditor::actionListenerCallback(const juce::String& message) {
+    RAActionMsg actionMsg(message);
+    juce::String prefix = actionMsg.getPrefix();
+    juce::String action = actionMsg.getAction();
+    int subId = actionMsg.getSubId();
+
+    if (prefix == "motd")
+    {
+        motdScreen.setVisible(false);
+        audioProcessor.settings.set("motdTag", action);
+        audioProcessor.settings.save(audioProcessor.fileIO);
     }
 }

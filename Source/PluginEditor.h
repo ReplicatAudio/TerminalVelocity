@@ -11,6 +11,7 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "RATheme.h"
+#include "RAMotdScreen.h"
 
 //==============================================================================
 /**
@@ -19,7 +20,8 @@ class ZmidiAudioProcessorEditor : public juce::AudioProcessorEditor,
     private juce::Slider::Listener,
     private juce::AudioProcessorParameter::Listener,
     private juce::ChangeListener,
-    private juce::Button::Listener
+    private juce::Button::Listener, 
+    private juce::ActionListener
 {
 public:
     ZmidiAudioProcessorEditor(ZmidiAudioProcessor&);
@@ -40,14 +42,13 @@ private:
     ) override;
     void changeListenerCallback(juce::ChangeBroadcaster* source) override;
     void buttonClicked(juce::Button* button) override;
-    //void paramChanged();
+
     void typeSelectChanged(); // [3]
     void applyThemeTweaks();
     void showOneSlider();
     void showTwoSliders();
     void floorVelocity();
-
-    //juce::String title = "MIDI Gain";
+    void actionListenerCallback(const juce::String& message) override;
     juce::ImageButton raLogoBtn;
     //==================================================================
     // This reference is provided as a quick way for your editor to
@@ -58,6 +59,8 @@ private:
     juce::Slider slider2; // [1]
 
     juce::ComboBox typeSelect;
+
+    RAMotdScreen motdScreen;
     // Theme
     RATheme theme;
 

@@ -191,6 +191,7 @@ void ZmidiAudioProcessorEditor::buttonClicked(juce::Button* button)
     if (button == &raLogoBtn)
     {
         // Open URL
+        juce::URL("https://replicataudio.com").launchInDefaultBrowser();
     }
 }
 void ZmidiAudioProcessorEditor::floorVelocity()

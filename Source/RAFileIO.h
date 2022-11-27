@@ -4,7 +4,7 @@
     FilIO.h
     Created: 4 Nov 2022 11:59:57pm
     Author:  dombr
-    v2
+    v3
   ==============================================================================
 */
 
@@ -16,26 +16,37 @@
 class RAFileIO
 {
 public:
-    RAFileIO(juce::String newPath)
+    RAFileIO(juce::String newPath = "__na__")
     {
-        basePath = newPath;
-        //writeFile();
+        if (newPath == "__na__")
+        {
+            juce::String productName = ProjectInfo::projectName;
+            newPath = productName;
+        }
+        pathRA = juce::File::getSpecialLocation(juce::File::SpecialLocationType::userHomeDirectory).getChildFile("ReplicatAudio");
+        pathApp = pathRA.getChildFile(newPath);
     }
     ~RAFileIO() {};
-    void setBasePath(juce::String newPath) {
-        basePath = newPath;
-    }
-    juce::String getBasePath() {
-        return basePath;
-    }
-    bool basePathExists()
+    // Not OS agnostic only for end-users
+    void setBasePath(juce::String newPath) 
     {
-        if (juce::File(basePath).isDirectory())
+        pathApp = juce::File(newPath);
+    }
+    juce::String getPathRAString() 
+    {
+        return pathRA.getFullPathName();
+    }
+    juce::File getPathRA()
+    {
+        return pathRA;
+    }
+    bool pathRAExists()
+    {
+        if (pathRA.isDirectory())
         {
             return true;
         }
         return false;
-
     }
     bool pathExists(juce::String pathString)
     {
@@ -48,63 +59,20 @@ public:
     // Checks if a file exists in the base path
     bool fileExists(juce::String pathString)
     {
-        juce::File path(juce::File(basePath).getChildFile(pathString));
+        juce::File path(pathString);
         bool exists = path.existsAsFile();
         return exists;
-    }
-    bool testWrite()
-    {
-        juce::File path(juce::File(basePath).getChildFile("testFile"));
-        path.create();
-        bool exists = path.existsAsFile();
-        path.deleteFile();
-        return exists;
-    }
-    bool testRead()
-    {
-        juce::File path(juce::File(basePath).getChildFile("testFile"));
-        path.create();
-        path.replaceWithText("test content", false);
-        juce::String testRead = path.loadFileAsString();
-        path.deleteFile();
-        if (testRead == "test content")
-        {
-            return true;
-        }
-        return false;
     }
     // Switched filter to beginning add subdir
-    juce::Array<juce::File> directoryListing(juce::String filter = "*", juce::String subDir ="__na__", juce::String dir = "__base__", int type = 3, bool recursive = true)
+    juce::Array<juce::File> directoryListing(juce::String filter = "*", int type = 3, bool recursive = true)
     {
-
-        if (dir == "__base__")
-        {
-            dir = basePath;
-        }
-        if (subDir != "__na__")
-        {
-            dir += "\\" + subDir;
-        }
-        jassert(pathExists(dir));
-        juce::File path(dir);
-        juce::Array<juce::File> files = path.findChildFiles(type, recursive, filter);
+        juce::Array<juce::File> files = pathApp.findChildFiles(type, recursive, filter);
         return files;
     }
     // Switched filter to beginning add subdir
-    juce::Array<juce::String> directoryListingStrings(juce::String filter = "*", juce::String subDir = "__na__", juce::String dir = "__base__", int type = 3, bool recursive = true)
+    juce::Array<juce::String> directoryListingStrings(juce::String filter = "*", int type = 3, bool recursive = true)
     {
-
-        if (dir == "__base__")
-        {
-            dir = basePath;
-        }
-        if (subDir != "__na__")
-        {
-            dir += "\\" + subDir;
-        }
-        jassert(pathExists(dir));
-        juce::File path(dir);
-        juce::Array<juce::File> files = path.findChildFiles(type, recursive, filter);
+        juce::Array<juce::File> files = pathApp.findChildFiles(type, recursive, filter);
         juce::Array<juce::String> fileNames;
         for (juce::File file : files)
         {
@@ -113,12 +81,13 @@ public:
         return fileNames;
     }
     void writeFile(juce::String fileName, juce::String content = "poop", juce::String subDir = "__na__") {
-        juce::String filePath = basePath;
-        if (subDir != "__na__")
-        {
-             filePath += "\\" + subDir;
-        }
-        juce::File path(juce::File(filePath).getChildFile(fileName));
+        juce::File path(pathApp.getChildFile(fileName));
+        path.create();
+        path.replaceWithText(content, false);
+    }
+    void writeFileRA(juce::String fileName, juce::String content)
+    {
+        juce::File path(pathRA.getChildFile(fileName));
         path.create();
         path.replaceWithText(content, false);
     }
@@ -130,16 +99,18 @@ public:
     }
     void revealFile(juce::String fileName)
     {
-        juce::File path(juce::File(basePath).getChildFile(fileName));
+        juce::File path(pathApp.getChildFile(fileName));
         path.revealToUser();
     }
-    juce::String loadFile(juce::String fileName, juce::String subDir = "__na__") {
-        juce::String filePath = basePath;
-        if (subDir != "__na__")
-        {
-            filePath += "\\" + subDir;
-        }
-        juce::File path(juce::File(filePath).getChildFile(fileName));
+    juce::String loadFile(juce::String fileName) {
+        juce::File path(pathApp.getChildFile(fileName));
+        if (!path.existsAsFile())
+            return "na";
+        auto fileText = path.loadFileAsString();
+        return fileText;
+    }
+    juce::String loadFileRA(juce::String fileName) {
+        juce::File path(pathRA.getChildFile(fileName));
         if (!path.existsAsFile())
             return "na";
         auto fileText = path.loadFileAsString();
@@ -153,5 +124,6 @@ public:
         return fileText;
     }
 private:
-    juce::String basePath;
+    juce::File pathRA;
+    juce::File pathApp;
 };

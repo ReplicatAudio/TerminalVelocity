@@ -21,7 +21,7 @@ ZmidiAudioProcessor::ZmidiAudioProcessor()
                      #endif
                        )
 #endif
-    , fileIO("C:\\ReplicatAudio\\TerminalVelocity")
+    , fileIO()
 {
     addParameter(p1 = new juce::AudioParameterInt("p1", "slider 1", -127, 127, 0));
     addParameter(p2 = new juce::AudioParameterInt("p2", "slider 2", -127, 127, 100));

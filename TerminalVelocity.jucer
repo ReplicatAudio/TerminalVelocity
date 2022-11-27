@@ -3,8 +3,8 @@
 <JUCERPROJECT id="p5dSOQ" name="TerminalVelocity" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
               version="0.9.0" companyName="ReplicatAudio" splashScreenColour="Dark"
-              pluginFormats="buildStandalone,buildVST3" pluginCharacteristicsValue="pluginIsMidiEffectPlugin,pluginProducesMidiOut,pluginWantsMidiIn"
-              pluginVST3Category="Dynamics,Fx,Tools">
+              pluginFormats="buildStandalone,buildVST3" pluginVST3Category="Dynamics,Fx,Tools"
+              pluginCharacteristicsValue="pluginProducesMidiOut,pluginWantsMidiIn">
   <MAINGROUP id="aiqdeI" name="TerminalVelocity">
     <GROUP id="{C1530E23-E2D3-D3B8-9585-0BCCA79250FC}" name="Source">
       <FILE id="SM1hUR" name="RAFileIO.h" compile="0" resource="0" file="Source/RAFileIO.h"/>

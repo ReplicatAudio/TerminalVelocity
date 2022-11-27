@@ -4,7 +4,7 @@
     RASettings.h
     Created: 7 Nov 2022 4:13:17pm
     Author:  dombr
-
+    v3
   ==============================================================================
 */
 
@@ -15,11 +15,15 @@
 class RASettings
 {
 public:
-    RASettings(){};
+    RASettings()
+    {
+        projectName = ProjectInfo::projectName;
+    };
     ~RASettings() {};
     void load(RAFileIO fileIO)
     {
-        auto file = fileIO.loadFileAbs("C:\\ReplicatAudio\\"+appId+".rasettings");
+        //auto file = fileIO.loadFileAbs("C:\\ReplicatAudio\\"+projectName+".rasettings");
+        auto file = fileIO.loadFileRA(projectName+".rasettings");
         auto valTree = juce::ValueTree::fromXml(file);
         for (const auto& pair : settingsMap) {
             auto first = pair.first;
@@ -45,7 +49,8 @@ public:
         xmlSettings.setAttribute("version", version);
 
         auto xmlString = xmlSettings.toString();
-        fileIO.writeFileAbs("C:\\ReplicatAudio", appId + ".rasettings", xmlString);
+        //fileIO.writeFileAbs("C:\\ReplicatAudio", projectName + ".rasettings", xmlString);
+        fileIO.writeFileRA(projectName + ".rasettings", xmlString);
     }
     juce::String get(juce::String name)
     {
@@ -81,6 +86,6 @@ public:
         {"updates", "true"},
         {"motdTag", "x"}
     };
-    juce::String appId = "terminal_velocity";
+    juce::String projectName;
 };
 
